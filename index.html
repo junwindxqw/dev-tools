@@ -48,6 +48,10 @@
           <span class="nav-icon">🎲</span>
           <span class="nav-label">随机字符生成</span>
         </button>
+        <button class="nav-item" data-tool="idcard">
+          <span class="nav-icon">🪪</span>
+          <span class="nav-label">身份证生成</span>
+        </button>
         <button class="nav-item" data-tool="regex">
           <span class="nav-icon">/.*/</span>
           <span class="nav-label">正则测试</span>
@@ -475,6 +479,86 @@
             💡 支持大整数 (BigInt)，负数请用十进制负数格式
           </div>
           <pre class="error-output" id="baseError"></pre>
+        </div>
+      </section>
+
+      <!-- 身份证生成 -->
+      <section class="tool-panel" id="tool-idcard">
+        <header class="tool-header">
+          <h2>身份证生成</h2>
+          <p class="tool-desc">根据选择的省份和性别生成合规的 18 位身份证号码（可批量生成）</p>
+        </header>
+        <div class="tool-body">
+          <div class="idcard-config">
+            <div class="config-row">
+              <label>省份</label>
+              <select id="icProvince">
+                <option value="">— 随机省份 —</option>
+                <option value="11">北京市</option>
+                <option value="12">天津市</option>
+                <option value="13">河北省</option>
+                <option value="14">山西省</option>
+                <option value="15">内蒙古自治区</option>
+                <option value="21">辽宁省</option>
+                <option value="22">吉林省</option>
+                <option value="23">黑龙江省</option>
+                <option value="31">上海市</option>
+                <option value="32">江苏省</option>
+                <option value="33">浙江省</option>
+                <option value="34">安徽省</option>
+                <option value="35">福建省</option>
+                <option value="36">江西省</option>
+                <option value="37">山东省</option>
+                <option value="41">河南省</option>
+                <option value="42">湖北省</option>
+                <option value="43">湖南省</option>
+                <option value="44">广东省</option>
+                <option value="45">广西壮族自治区</option>
+                <option value="46">海南省</option>
+                <option value="50">重庆市</option>
+                <option value="51">四川省</option>
+                <option value="52">贵州省</option>
+                <option value="53">云南省</option>
+                <option value="54">西藏自治区</option>
+                <option value="61">陕西省</option>
+                <option value="62">甘肃省</option>
+                <option value="63">青海省</option>
+                <option value="64">宁夏回族自治区</option>
+                <option value="65">新疆维吾尔自治区</option>
+              </select>
+            </div>
+            <div class="config-row">
+              <label>性别</label>
+              <select id="icGender">
+                <option value="">— 随机性别 —</option>
+                <option value="male">男性 ♂（第 17 位奇数）</option>
+                <option value="female">女性 ♀（第 17 位偶数）</option>
+              </select>
+            </div>
+            <div class="config-row">
+              <label>生日起</label>
+              <input type="date" id="icBirthStart" value="1970-01-01" />
+            </div>
+            <div class="config-row">
+              <label>生日止</label>
+              <input type="date" id="icBirthEnd" value="2005-12-31" />
+            </div>
+            <div class="config-row">
+              <label>生成数量</label>
+              <input type="number" id="icCount" value="1" min="1" max="50" />
+            </div>
+            <div class="config-row">
+              <button class="btn btn-primary" id="icGenerate">🪪 生成</button>
+              <button class="btn" id="icCopyAll">📋 复制全部</button>
+              <button class="btn btn-ghost" id="icClear">🗑️ 清空</button>
+            </div>
+          </div>
+          <div class="result-wrapper">
+            <textarea id="icResult" readonly placeholder='点击"生成"查看身份证号码...'></textarea>
+          </div>
+          <div class="idcard-info" id="icInfo"></div>
+          <pre class="error-output" id="icError"></pre>
+          <p class="idcard-disclaimer">⚠️ 生成号码仅用于开发测试，请勿用于真实身份认证。校验码符合 GB 11643-1999 标准。</p>
         </div>
       </section>
     </main>

@@ -530,3 +530,47 @@ textarea::placeholder { color: #64748b; }
 @media (max-width: 480px) {
   .counter-grid { grid-template-columns: 1fr; }
 }
+
+/* ============ ID Card Tool ============ */
+.idcard-config {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  margin-bottom: 14px;
+}
+.idcard-config .config-row:last-child {
+  grid-column: 1 / -1;
+  display: flex; gap: 10px;
+}
+#tool-idcard .config-row { display: flex; flex-direction: column; gap: 6px; }
+#tool-idcard .config-row label { font-size: 12px; color: #64748b; }
+#tool-idcard .config-row select,
+#tool-idcard .config-row input[type="date"],
+#tool-idcard .config-row input[type="number"] {
+  padding: 9px 12px;
+  background: #1e293b; border: 1px solid #334155; border-radius: 8px;
+  color: #e2e8f0; font-size: 13px; outline: none;
+  transition: border-color .15s;
+}
+#tool-idcard .config-row select:focus,
+#tool-idcard .config-row input:focus { border-color: #6366f1; }
+#tool-idcard .config-row select { cursor: pointer; }
+#tool-idcard .config-row select option { background: #1e293b; }
+
+.result-wrapper { margin-top: 10px; }
+#tool-idcard .result-wrapper textarea { font-family: 'JetBrains Mono', Menlo, Consolas, monospace; }
+
+.idcard-info {
+  margin-top: 12px; padding: 14px;
+  background: #1e293b; border: 1px solid #334155; border-radius: 10px;
+  font-size: 13px; line-height: 1.7; color: #94a3b8;
+  display: none;
+}
+.idcard-info.show { display: block; }
+.idcard-info .ic-item { color: #e2e8f0; font-family: 'JetBrains Mono', Menlo, Consolas, monospace; }
+
+.idcard-disclaimer {
+  margin-top: 14px; font-size: 11px; color: #475569; font-style: italic;
+}
+
+@media (max-width: 600px) {
+  .idcard-config { grid-template-columns: 1fr; }
+}
