@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DevTools · 程序员工具箱</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%A7%B0%3C/text%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="app">
+    <!-- 左侧菜单栏 -->
+    <aside class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🛠️</span>
+        <div class="logo-text">
+          <h1>DevTools</h1>
+          <p>程序员工具箱</p>
+        </div>
+      </div>
+      <nav class="tool-nav" id="toolNav">
+        <div class="nav-section">常用工具</div>
+        <button class="nav-item active" data-tool="json">
+          <span class="nav-icon">{ }</span>
+          <span class="nav-label">JSON 格式化</span>
+        </button>
+        <button class="nav-item" data-tool="base64">
+          <span class="nav-icon">⇄</span>
+          <span class="nav-label">Base64 编解码</span>
+        </button>
+        <button class="nav-item" data-tool="random">
+          <span class="nav-icon">🎲</span>
+          <span class="nav-label">随机字符生成</span>
+        </button>
+      </nav>
+      <footer class="sidebar-footer">
+        <p>Made with ❤️ for developers</p>
+      </footer>
+    </aside>
+
+    <!-- 右侧工具区域 -->
+    <main class="main">
+      <!-- JSON 格式化 -->
+      <section class="tool-panel active" id="tool-json">
+        <header class="tool-header">
+          <h2>JSON 格式化</h2>
+          <p class="tool-desc">美化、压缩、校验 JSON 数据</p>
+        </header>
+        <div class="tool-body">
+          <div class="toolbar">
+            <button class="btn btn-primary" id="jsonFormat">✨ 格式化</button>
+            <button class="btn" id="jsonMinify">📦 压缩</button>
+            <button class="btn" id="jsonEscape">🔒 转义</button>
+            <button class="btn" id="jsonUnescape">🔓 反转义</button>
+            <button class="btn" id="jsonCopy">📋 复制</button>
+            <button class="btn btn-ghost" id="jsonClear">🗑️ 清空</button>
+          </div>
+          <div class="editor-wrapper">
+            <textarea id="jsonInput" placeholder='在此粘贴 JSON 数据，例如: {"name":"DevTools","version":1}'></textarea>
+            <pre class="error-output" id="jsonError"></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- Base64 编解码 -->
+      <section class="tool-panel" id="tool-base64">
+        <header class="tool-header">
+          <h2>Base64 编解码</h2>
+          <p class="tool-desc">快速在文本与 Base64 之间转换（支持 UTF-8）</p>
+        </header>
+        <div class="tool-body">
+          <div class="base64-grid">
+            <div class="base64-pane">
+              <div class="pane-header">
+                <span>📝 文本</span>
+                <button class="btn btn-ghost btn-sm" id="b64ClearInput">清空</button>
+              </div>
+              <textarea id="b64Input" placeholder="输入要编码的文本..."></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="b64Encode">⬇️ 编码为 Base64</button>
+                <button class="btn" id="b64Swap">⇅ 交换</button>
+              </div>
+            </div>
+            <div class="base64-pane">
+              <div class="pane-header">
+                <span>🔐 Base64</span>
+                <button class="btn btn-ghost btn-sm" id="b64Copy">复制</button>
+              </div>
+              <textarea id="b64Output" placeholder="输入 Base64 来解码..." spellcheck="false"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="b64Decode">⬆️ 解码为文本</button>
+              </div>
+            </div>
+          </div>
+          <pre class="error-output" id="b64Error"></pre>
+        </div>
+      </section>
+
+      <!-- 随机字符生成 -->
+      <section class="tool-panel" id="tool-random">
+        <header class="tool-header">
+          <h2>随机字符生成</h2>
+          <p class="tool-desc">生成安全的随机密码、Token 或指定长度的字符串</p>
+        </header>
+        <div class="tool-body">
+          <div class="random-config">
+            <div class="config-row">
+              <label>长度</label>
+              <input type="number" id="randLength" value="16" min="1" max="512" />
+            </div>
+            <div class="config-row checkbox-row">
+              <label><input type="checkbox" id="randLower" checked /> 小写字母 (a-z)</label>
+              <label><input type="checkbox" id="randUpper" checked /> 大写字母 (A-Z)</label>
+              <label><input type="checkbox" id="randDigit" checked /> 数字 (0-9)</label>
+              <label><input type="checkbox" id="randSymbol" /> 特殊符号 (!@#...)</label>
+              <label><input type="checkbox" id="randAmbiguous" /> 排除易混淆字符 (0/O, 1/l)</label>
+            </div>
+            <div class="config-row">
+              <button class="btn btn-primary" id="randGenerate">🎲 生成</button>
+              <button class="btn" id="randCopy">📋 复制</button>
+              <span class="strength" id="randStrength"></span>
+            </div>
+          </div>
+          <div class="result-wrapper">
+            <textarea id="randResult" readonly placeholder="点击"生成"查看结果"></textarea>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Toast 提示 -->
+  <div class="toast" id="toast"></div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
