@@ -48,6 +48,22 @@
           <span class="nav-icon">🎲</span>
           <span class="nav-label">随机字符生成</span>
         </button>
+        <button class="nav-item" data-tool="regex">
+          <span class="nav-icon">/.*/</span>
+          <span class="nav-label">正则测试</span>
+        </button>
+        <button class="nav-item" data-tool="color">
+          <span class="nav-icon">🎨</span>
+          <span class="nav-label">颜色转换</span>
+        </button>
+        <button class="nav-item" data-tool="counter">
+          <span class="nav-icon">🔢</span>
+          <span class="nav-label">文本计数</span>
+        </button>
+        <button class="nav-item" data-tool="baseconv">
+          <span class="nav-icon">0b10</span>
+          <span class="nav-label">进制转换</span>
+        </button>
       </nav>
       <footer class="sidebar-footer">
         <p>Made with ❤️ for developers</p>
@@ -282,6 +298,183 @@
           <div class="result-wrapper">
             <textarea id="randResult" readonly placeholder='点击"生成"查看结果'></textarea>
           </div>
+        </div>
+      </section>
+
+      <!-- 正则测试 -->
+      <section class="tool-panel" id="tool-regex">
+        <header class="tool-header">
+          <h2>正则表达式测试</h2>
+          <p class="tool-desc">实时匹配测试，支持常用 flag 组合，高亮所有匹配项</p>
+        </header>
+        <div class="tool-body">
+          <div class="regex-config">
+            <div class="regex-input-row">
+              <span class="regex-delim">/</span>
+              <input type="text" id="regexPattern" placeholder="输入正则，例如: \d+" />
+              <span class="regex-delim">/</span>
+              <input type="text" id="regexFlags" value="g" placeholder="flags" maxlength="5" />
+            </div>
+            <div class="regex-flags">
+              <label><input type="checkbox" id="flagG" checked /> g (全局)</label>
+              <label><input type="checkbox" id="flagI" /> i (忽略大小写)</label>
+              <label><input type="checkbox" id="flagM" /> m (多行)</label>
+              <label><input type="checkbox" id="flagS" /> s (dotAll)</label>
+            </div>
+          </div>
+          <textarea id="regexText" placeholder="在此输入待测试文本..."></textarea>
+          <div class="regex-result">
+            <div class="regex-result-header">
+              <span>匹配结果</span>
+              <span id="regexMatchCount" class="match-count">0 个匹配</span>
+            </div>
+            <div id="regexHighlight" class="regex-highlight">等待输入...</div>
+            <div id="regexMatches" class="regex-matches"></div>
+          </div>
+          <pre class="error-output" id="regexError"></pre>
+        </div>
+      </section>
+
+      <!-- 颜色转换 -->
+      <section class="tool-panel" id="tool-color">
+        <header class="tool-header">
+          <h2>颜色转换</h2>
+          <p class="tool-desc">HEX / RGB / HSL 互相转换，支持 CSS 颜色选择器</p>
+        </header>
+        <div class="tool-body">
+          <div class="color-main">
+            <div class="color-picker-wrap">
+              <input type="color" id="colorPicker" value="#6366f1" />
+            </div>
+            <div class="color-preview" id="colorPreview" style="background:#6366f1;">
+              <span id="colorPreviewText">#6366f1</span>
+            </div>
+          </div>
+          <div class="color-grid">
+            <div class="color-field">
+              <label>HEX</label>
+              <div class="color-input-row">
+                <input type="text" id="colorHex" value="#6366f1" />
+                <button class="btn btn-ghost btn-sm" data-copy="colorHex">📋</button>
+              </div>
+            </div>
+            <div class="color-field">
+              <label>RGB</label>
+              <div class="color-input-row">
+                <input type="text" id="colorRgb" value="rgb(99, 102, 241)" />
+                <button class="btn btn-ghost btn-sm" data-copy="colorRgb">📋</button>
+              </div>
+            </div>
+            <div class="color-field">
+              <label>HSL</label>
+              <div class="color-input-row">
+                <input type="text" id="colorHsl" value="hsl(239, 84%, 67%)" />
+                <button class="btn btn-ghost btn-sm" data-copy="colorHsl">📋</button>
+              </div>
+            </div>
+          </div>
+          <div class="color-presets">
+            <span>常用色：</span>
+            <button class="color-swatch" style="background:#ef4444" data-color="#ef4444" title="红"></button>
+            <button class="color-swatch" style="background:#f97316" data-color="#f97316" title="橙"></button>
+            <button class="color-swatch" style="background:#eab308" data-color="#eab308" title="黄"></button>
+            <button class="color-swatch" style="background:#22c55e" data-color="#22c55e" title="绿"></button>
+            <button class="color-swatch" style="background:#06b6d4" data-color="#06b6d4" title="青"></button>
+            <button class="color-swatch" style="background:#3b82f6" data-color="#3b82f6" title="蓝"></button>
+            <button class="color-swatch" style="background:#8b5cf6" data-color="#8b5cf6" title="紫"></button>
+            <button class="color-swatch" style="background:#ec4899" data-color="#ec4899" title="粉"></button>
+            <button class="color-swatch" style="background:#0f172a" data-color="#0f172a" title="黑"></button>
+            <button class="color-swatch" style="background:#ffffff" data-color="#ffffff" title="白"></button>
+          </div>
+          <pre class="error-output" id="colorError"></pre>
+        </div>
+      </section>
+
+      <!-- 文本计数 -->
+      <section class="tool-panel" id="tool-counter">
+        <header class="tool-header">
+          <h2>文本计数</h2>
+          <p class="tool-desc">实时统计字符、字数、行数、词数、中文字数</p>
+        </header>
+        <div class="tool-body">
+          <textarea id="counterInput" placeholder="在此粘贴或输入文本..."></textarea>
+          <div class="counter-grid">
+            <div class="counter-card">
+              <div class="counter-value" id="cntChars">0</div>
+              <div class="counter-label">字符数</div>
+            </div>
+            <div class="counter-card">
+              <div class="counter-value" id="cntCharsNoSpace">0</div>
+              <div class="counter-label">字符 (不含空格)</div>
+            </div>
+            <div class="counter-card">
+              <div class="counter-value" id="cntWords">0</div>
+              <div class="counter-label">词数</div>
+            </div>
+            <div class="counter-card">
+              <div class="counter-value" id="cntLines">0</div>
+              <div class="counter-label">行数</div>
+            </div>
+            <div class="counter-card">
+              <div class="counter-value" id="cntChinese">0</div>
+              <div class="counter-label">中文字数</div>
+            </div>
+            <div class="counter-card">
+              <div class="counter-value" id="cntBytes">0</div>
+              <div class="counter-label">字节 (UTF-8)</div>
+            </div>
+          </div>
+          <div class="toolbar">
+            <button class="btn btn-ghost" id="counterClear">🗑️ 清空</button>
+            <button class="btn" id="counterLorem">📝 示例文本</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 进制转换 -->
+      <section class="tool-panel" id="tool-baseconv">
+        <header class="tool-header">
+          <h2>进制转换</h2>
+          <p class="tool-desc">二进制 / 八进制 / 十进制 / 十六进制互转，实时同步</p>
+        </header>
+        <div class="tool-body">
+          <div class="base-grid">
+            <div class="base-row">
+              <label class="base-label" for="binInput">二进制 (Binary)</label>
+              <div class="base-input-wrap">
+                <span class="base-prefix">0b</span>
+                <input type="text" id="binInput" placeholder="1010" />
+                <button class="btn btn-ghost btn-sm" data-copy="binInput">📋</button>
+              </div>
+            </div>
+            <div class="base-row">
+              <label class="base-label" for="octInput">八进制 (Octal)</label>
+              <div class="base-input-wrap">
+                <span class="base-prefix">0o</span>
+                <input type="text" id="octInput" placeholder="12" />
+                <button class="btn btn-ghost btn-sm" data-copy="octInput">📋</button>
+              </div>
+            </div>
+            <div class="base-row">
+              <label class="base-label" for="decInput">十进制 (Decimal)</label>
+              <div class="base-input-wrap">
+                <input type="text" id="decInput" placeholder="10" />
+                <button class="btn btn-ghost btn-sm" data-copy="decInput">📋</button>
+              </div>
+            </div>
+            <div class="base-row">
+              <label class="base-label" for="hexInput">十六进制 (Hex)</label>
+              <div class="base-input-wrap">
+                <span class="base-prefix">0x</span>
+                <input type="text" id="hexInput" placeholder="A" />
+                <button class="btn btn-ghost btn-sm" data-copy="hexInput">📋</button>
+              </div>
+            </div>
+          </div>
+          <div class="base-tip">
+            💡 支持大整数 (BigInt)，负数请用十进制负数格式
+          </div>
+          <pre class="error-output" id="baseError"></pre>
         </div>
       </section>
     </main>
