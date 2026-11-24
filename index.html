@@ -28,6 +28,22 @@
           <span class="nav-icon">⇄</span>
           <span class="nav-label">Base64 编解码</span>
         </button>
+        <button class="nav-item" data-tool="url">
+          <span class="nav-icon">🔗</span>
+          <span class="nav-label">URL 编解码</span>
+        </button>
+        <button class="nav-item" data-tool="html">
+          <span class="nav-icon">&lt;&gt;</span>
+          <span class="nav-label">HTML 实体</span>
+        </button>
+        <button class="nav-item" data-tool="timestamp">
+          <span class="nav-icon">🕐</span>
+          <span class="nav-label">时间戳转换</span>
+        </button>
+        <button class="nav-item" data-tool="uuid">
+          <span class="nav-icon">🆔</span>
+          <span class="nav-label">UUID 生成</span>
+        </button>
         <button class="nav-item" data-tool="random">
           <span class="nav-icon">🎲</span>
           <span class="nav-label">随机字符生成</span>
@@ -96,6 +112,148 @@
         </div>
       </section>
 
+      <!-- URL 编解码 -->
+      <section class="tool-panel" id="tool-url">
+        <header class="tool-header">
+          <h2>URL 编解码</h2>
+          <p class="tool-desc">在 URL 原始文本与 percent-encoding 之间转换，支持查询参数解析</p>
+        </header>
+        <div class="tool-body">
+          <div class="url-grid">
+            <div class="url-pane">
+              <div class="pane-header"><span>📝 原始文本 / 未编码 URL</span></div>
+              <textarea id="urlInput" placeholder="例如: https://example.com/搜索?q=程序员 或 key=值&foo=bar"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="urlEncode">⬇️ 编码</button>
+                <button class="btn" id="urlEncodeFull">🔧 完整编码（含特殊字符）</button>
+              </div>
+            </div>
+            <div class="url-pane">
+              <div class="pane-header"><span>🔗 编码后 / 已编码 URL</span>
+                <button class="btn btn-ghost btn-sm" id="urlCopy">复制</button>
+              </div>
+              <textarea id="urlOutput" placeholder="粘贴已编码 URL 来解码..." spellcheck="false"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="urlDecode">⬆️ 解码</button>
+                <button class="btn" id="urlSwap">⇅ 交换</button>
+              </div>
+            </div>
+          </div>
+          <pre class="error-output" id="urlError"></pre>
+        </div>
+      </section>
+
+      <!-- HTML 实体编解码 -->
+      <section class="tool-panel" id="tool-html">
+        <header class="tool-header">
+          <h2>HTML 实体编解码</h2>
+          <p class="tool-desc">转义 / 反转义 HTML 特殊字符，防止 XSS 和处理富文本</p>
+        </header>
+        <div class="tool-body">
+          <div class="html-grid">
+            <div class="html-pane">
+              <div class="pane-header"><span>📝 原始 HTML</span></div>
+              <textarea id="htmlInput" placeholder="例如: <script>alert('xss')</script>"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="htmlEncode">⬇️ 转义为实体</button>
+              </div>
+            </div>
+            <div class="html-pane">
+              <div class="pane-header"><span>&amp;_; HTML 实体</span>
+                <button class="btn btn-ghost btn-sm" id="htmlCopy">复制</button>
+              </div>
+              <textarea id="htmlOutput" placeholder="粘贴 HTML 实体来反转义..." spellcheck="false"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="htmlDecode">⬆️ 反转义</button>
+                <button class="btn" id="htmlSwap">⇅ 交换</button>
+              </div>
+            </div>
+          </div>
+          <pre class="error-output" id="htmlError"></pre>
+        </div>
+      </section>
+
+      <!-- 时间戳转换 -->
+      <section class="tool-panel" id="tool-timestamp">
+        <header class="tool-header">
+          <h2>时间戳转换</h2>
+          <p class="tool-desc">Unix 时间戳 ⇄ 人类可读日期，秒/毫秒自动识别</p>
+        </header>
+        <div class="tool-body">
+          <div class="ts-now-bar">
+            <span class="now-label">现在：</span>
+            <span class="now-value" id="tsNowMs">—</span>
+            <span class="now-sep">·</span>
+            <span class="now-value" id="tsNowSec">—</span>
+            <span class="now-sep">·</span>
+            <span class="now-value" id="tsNowStr">—</span>
+            <button class="btn btn-sm btn-ghost" id="tsRefresh">🔄 刷新</button>
+          </div>
+          <div class="ts-grid">
+            <div class="ts-pane">
+              <div class="pane-header">
+                <span>🔢 时间戳</span>
+                <button class="btn btn-ghost btn-sm" id="tsNowBtn">使用当前时间</button>
+              </div>
+              <textarea id="tsInput" placeholder="输入秒或毫秒时间戳，例如: 1700000000 或 1700000000000"></textarea>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="tsToDate">⬇️ 转日期</button>
+                <button class="btn" id="tsCopyTs">📋 复制时间戳</button>
+              </div>
+            </div>
+            <div class="ts-pane">
+              <div class="pane-header">
+                <span>📅 日期字符串</span>
+                <button class="btn btn-ghost btn-sm" id="tsToday">今天</button>
+              </div>
+              <textarea id="tsOutput" placeholder="输入日期如 2024-01-15 或 2024-01-15T10:30:00，或选择时区后点下方按钮"></textarea>
+              <div class="ts-timezone">
+                <label>时区</label>
+                <select id="tsTz">
+                  <option value="local">本地时区</option>
+                  <option value="UTC">UTC</option>
+                  <option value="Asia/Shanghai">Asia/Shanghai (CST +8)</option>
+                  <option value="America/New_York">America/New_York (EST)</option>
+                  <option value="Europe/London">Europe/London (GMT)</option>
+                  <option value="Asia/Tokyo">Asia/Tokyo (JST +9)</option>
+                </select>
+              </div>
+              <div class="pane-actions">
+                <button class="btn btn-primary" id="tsFromDate">⬆️ 转时间戳</button>
+                <button class="btn" id="tsCopyDate">📋 复制日期</button>
+              </div>
+            </div>
+          </div>
+          <pre class="error-output" id="tsError"></pre>
+        </div>
+      </section>
+
+      <!-- UUID 生成 -->
+      <section class="tool-panel" id="tool-uuid">
+        <header class="tool-header">
+          <h2>UUID 生成</h2>
+          <p class="tool-desc">批量生成 v4 随机 UUID，支持短格式和连字符格式切换</p>
+        </header>
+        <div class="tool-body">
+          <div class="uuid-config">
+            <div class="config-row checkbox-row">
+              <label><input type="checkbox" id="uuidHyphen" checked /> 包含连字符 (<code>xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx</code>)</label>
+              <label><input type="checkbox" id="uuidUpper" /> 大写字母</label>
+            </div>
+            <div class="config-row">
+              <label>生成数量</label>
+              <input type="number" id="uuidCount" value="5" min="1" max="100" />
+              <button class="btn btn-primary" id="uuidGenerate">🎲 生成 UUID</button>
+              <button class="btn" id="uuidCopy">📋 复制全部</button>
+              <button class="btn btn-ghost" id="uuidClear">🗑️ 清空</button>
+            </div>
+          </div>
+          <div class="result-wrapper">
+            <textarea id="uuidResult" readonly placeholder="点击 生成 UUID 查看结果"></textarea>
+          </div>
+        </div>
+      </section>
+
       <!-- 随机字符生成 -->
       <section class="tool-panel" id="tool-random">
         <header class="tool-header">
@@ -122,7 +280,7 @@
             </div>
           </div>
           <div class="result-wrapper">
-            <textarea id="randResult" readonly placeholder="点击"生成"查看结果"></textarea>
+            <textarea id="randResult" readonly placeholder='点击"生成"查看结果'></textarea>
           </div>
         </div>
       </section>

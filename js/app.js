@@ -260,5 +260,256 @@
   // 初始强度显示
   updateStrength();
 
+  // ==================== URL Tool ====================
+  const urlInput = document.getElementById('urlInput');
+  const urlOutput = document.getElementById('urlOutput');
+  const urlError = document.getElementById('urlError');
+
+  function showUrlError(msg) { urlError.textContent = '⚠️ ' + msg; urlError.classList.add('show'); }
+  function clearUrlError() { urlError.classList.remove('show'); urlError.textContent = ''; }
+
+  // 普通 URL 编码：空格→+，保留 / : ? = & # 等
+  function urlEncodeLight(str) {
+    // 用 encodeURI + 对 + 号和空格处理
+    return str.split('').map(ch => {
+      const code = ch.charCodeAt(0);
+      // 保留 RFC 3986 unreserved + / : ? # [] @ ! $ & ' ( ) * + , ; =
+      if (/[A-Za-z0-9\-_.~]/.test(ch)) return ch;
+      // encodeURI 会保留许多 URL 字符，我们 encodeURIComponent 后再保留常见 URL 字符
+      return encodeURIComponent(ch);
+    }).join('')
+      .replace(/%20/g, '+')
+      // 把 + / : # ? = & @ 从已编码还原出来（更像 encodeURIComponent + post-process）
+      ;
+  }
+
+  document.getElementById('urlEncode').onclick = () => {
+    if (!urlInput.value) { toast('请输入文本'); return; }
+    clearUrlError();
+    try {
+      // 使用 encodeURI：保留 URL 结构字符，只编码不安全字符
+      urlOutput.value = encodeURI(urlInput.value);
+      toast('✓ URL 编码成功');
+    } catch (e) {
+      showUrlError('编码失败: ' + e.message);
+    }
+  };
+
+  document.getElementById('urlEncodeFull').onclick = () => {
+    if (!urlInput.value) { toast('请输入文本'); return; }
+    clearUrlError();
+    try {
+      // encodeURIComponent：完全编码，用于 query 参数值
+      urlOutput.value = encodeURIComponent(urlInput.value);
+      toast('✓ 完整编码成功');
+    } catch (e) {
+      showUrlError('编码失败: ' + e.message);
+    }
+  };
+
+  document.getElementById('urlDecode').onclick = () => {
+    if (!urlOutput.value.trim()) { toast('请输入已编码 URL'); return; }
+    clearUrlError();
+    try {
+      urlInput.value = decodeURI(urlOutput.value);
+      toast('✓ URL 解码成功');
+    } catch {
+      try {
+        urlInput.value = decodeURIComponent(urlOutput.value);
+        toast('✓ 参数解码成功');
+      } catch (e) {
+        showUrlError('解码失败，请检查格式');
+      }
+    }
+  };
+
+  document.getElementById('urlSwap').onclick = () => {
+    const tmp = urlInput.value; urlInput.value = urlOutput.value; urlOutput.value = tmp; clearUrlError();
+  };
+
+  document.getElementById('urlCopy').onclick = () => {
+    if (!urlOutput.value) { toast('没有可复制内容'); return; }
+    copyText(urlOutput.value);
+  };
+
+  // ==================== HTML Entity Tool ====================
+  const htmlInput = document.getElementById('htmlInput');
+  const htmlOutput = document.getElementById('htmlOutput');
+  const htmlError = document.getElementById('htmlError');
+
+  function showHtmlError(msg) { htmlError.textContent = '⚠️ ' + msg; htmlError.classList.add('show'); }
+  function clearHtmlError() { htmlError.classList.remove('show'); htmlError.textContent = ''; }
+
+  const HTML_ENTITIES = {
+    '&': 'amp', '<': 'lt', '>': 'gt', '"': 'quot', "'": '#39', '/': '#47',
+  };
+  const HTML_REVERSE = {};
+  Object.keys(HTML_ENTITIES).forEach(k => HTML_REVERSE[HTML_ENTITIES[k]] = k);
+
+  function htmlEncode(str) {
+    return str.replace(/[&<>"'/]/g, ch => '&' + HTML_ENTITIES[ch] + ';')
+              .replace(/[^\x00-\x7F]/g, ch => '&#' + ch.charCodeAt(0) + ';');
+  }
+  function htmlDecode(str) {
+    return str.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (_, ent) => {
+      if (HTML_REVERSE[ent] !== undefined) return HTML_REVERSE[ent];
+      if (ent.startsWith('#')) {
+        const code = ent[1] === 'x'
+          ? parseInt(ent.substring(2), 16)
+          : parseInt(ent.substring(1), 10);
+        if (!isNaN(code)) return String.fromCharCode(code);
+      }
+      return '&' + ent + ';';
+    });
+  }
+
+  document.getElementById('htmlEncode').onclick = () => {
+    if (!htmlInput.value) { toast('请输入 HTML'); return; }
+    clearHtmlError();
+    htmlOutput.value = htmlEncode(htmlInput.value);
+    toast('✓ 已转义为实体');
+  };
+
+  document.getElementById('htmlDecode').onclick = () => {
+    if (!htmlOutput.value) { toast('请输入 HTML 实体'); return; }
+    clearHtmlError();
+    htmlInput.value = htmlDecode(htmlOutput.value);
+    toast('✓ 已反转义');
+  };
+
+  document.getElementById('htmlSwap').onclick = () => {
+    const tmp = htmlInput.value; htmlInput.value = htmlOutput.value; htmlOutput.value = tmp; clearHtmlError();
+  };
+
+  document.getElementById('htmlCopy').onclick = () => {
+    if (!htmlOutput.value) { toast('没有可复制内容'); return; }
+    copyText(htmlOutput.value);
+  };
+
+  // ==================== Timestamp Tool ====================
+  const tsNowMs = document.getElementById('tsNowMs');
+  const tsNowSec = document.getElementById('tsNowSec');
+  const tsNowStr = document.getElementById('tsNowStr');
+  const tsInput = document.getElementById('tsInput');
+  const tsOutput = document.getElementById('tsOutput');
+  const tsError = document.getElementById('tsError');
+  const tsTz = document.getElementById('tsTz');
+
+  function showTsError(msg) { tsError.textContent = '⚠️ ' + msg; tsError.classList.add('show'); }
+  function clearTsError() { tsError.classList.remove('show'); tsError.textContent = ''; }
+
+  function pad(n, w = 2) { return String(n).padStart(w, '0'); }
+  function formatDate(d) {
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+  }
+  function refreshNow() {
+    const now = Date.now();
+    tsNowMs.textContent = now + ' ms';
+    tsNowSec.textContent = Math.floor(now / 1000) + ' sec';
+    tsNowStr.textContent = formatDate(new Date(now));
+  }
+  refreshNow();
+  document.getElementById('tsRefresh').onclick = refreshNow;
+
+  document.getElementById('tsNowBtn').onclick = () => {
+    tsInput.value = Date.now().toString();
+    clearTsError();
+  };
+
+  document.getElementById('tsToday').onclick = () => {
+    const d = new Date();
+    tsOutput.value = formatDate(d);
+    clearTsError();
+  };
+
+  function formatWithTz(tsMs, tz) {
+    const d = new Date(tsMs);
+    try {
+      if (tz === 'local') return formatDate(d);
+      if (tz === 'UTC') {
+        return `${d.getUTCFullYear()}-${pad(d.getUTCMonth()+1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}:${pad(d.getUTCSeconds())} UTC`;
+      }
+      // 使用 Intl.DateTimeFormat
+      return d.toLocaleString('zh-CN', { timeZone: tz, hour12: false }) + ` (${tz})`;
+    } catch {
+      return formatDate(d);
+    }
+  }
+
+  document.getElementById('tsToDate').onclick = () => {
+    const raw = tsInput.value.trim();
+    if (!raw) { toast('请输入时间戳'); return; }
+    clearTsError();
+    let n = Number(raw);
+    if (isNaN(n)) { showTsError('无效的数字'); return; }
+    // 自动识别秒/毫秒：<= 1e12 视为秒
+    if (n < 1e12) n = n * 1000;
+    try {
+      tsOutput.value = formatWithTz(n, tsTz.value);
+      toast('✓ 转换成功');
+    } catch (e) {
+      showTsError('转换失败: ' + e.message);
+    }
+  };
+
+  document.getElementById('tsFromDate').onclick = () => {
+    const raw = tsOutput.value.trim();
+    if (!raw) { toast('请输入日期'); return; }
+    clearTsError();
+    try {
+      // 支持 "2024-01-15" 和 "2024-01-15 10:30:00"
+      const norm = raw.replace(' ', 'T');
+      const d = new Date(norm);
+      if (isNaN(d.getTime())) throw new Error('无效日期格式');
+      tsInput.value = d.getTime().toString();
+      toast('✓ 转换成功');
+    } catch (e) {
+      showTsError('转换失败: ' + e.message);
+    }
+  };
+
+  document.getElementById('tsCopyTs').onclick = () => {
+    if (!tsInput.value) { toast('没有可复制内容'); return; }
+    copyText(tsInput.value);
+  };
+  document.getElementById('tsCopyDate').onclick = () => {
+    if (!tsOutput.value) { toast('没有可复制内容'); return; }
+    copyText(tsOutput.value);
+  };
+
+  // ==================== UUID Tool ====================
+  const uuidHyphen = document.getElementById('uuidHyphen');
+  const uuidUpper = document.getElementById('uuidUpper');
+  const uuidCount = document.getElementById('uuidCount');
+  const uuidResult = document.getElementById('uuidResult');
+
+  function uuidV4() {
+    const buf = new Uint8Array(16);
+    crypto.getRandomValues(buf);
+    buf[6] = (buf[6] & 0x0f) | 0x40; // v4
+    buf[8] = (buf[8] & 0x3f) | 0x80; // variant
+    const h = Array.from(buf, b => b.toString(16).padStart(2, '0')).join('');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20)}`;
+  }
+
+  document.getElementById('uuidGenerate').onclick = () => {
+    const n = Math.max(1, Math.min(100, parseInt(uuidCount.value) || 5));
+    const parts = [];
+    for (let i = 0; i < n; i++) {
+      let id = uuidV4();
+      if (!uuidHyphen.checked) id = id.replace(/-/g, '');
+      if (uuidUpper.checked) id = id.toUpperCase();
+      parts.push(id);
+    }
+    uuidResult.value = parts.join('\n');
+    toast('✓ 已生成 ' + n + ' 个 UUID');
+  };
+
+  document.getElementById('uuidCopy').onclick = () => {
+    if (!uuidResult.value) { toast('没有可复制内容'); return; }
+    copyText(uuidResult.value);
+  };
+  document.getElementById('uuidClear').onclick = () => { uuidResult.value = ''; };
+
   console.log('%c🛠️ DevTools 程序员工具箱', 'color:#818cf8;font-weight:bold;font-size:14px;');
 })();

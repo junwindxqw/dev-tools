@@ -267,6 +267,86 @@ textarea::placeholder { color: #64748b; }
 }
 .result-wrapper textarea:focus { box-shadow: 0 0 0 3px rgba(99,102,241,.15); }
 
+/* ===== URL / HTML 工具（复用 base64 两栏布局） ===== */
+.url-grid, .html-grid, .ts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.url-pane, .html-pane, .ts-pane {
+  display: flex;
+  flex-direction: column;
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+}
+.url-pane textarea, .html-pane textarea, .ts-pane textarea {
+  flex: 1;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  min-height: 220px;
+}
+.url-pane textarea:focus, .html-pane textarea:focus, .ts-pane textarea:focus { box-shadow: none; }
+
+/* ===== Timestamp Tool ===== */
+.ts-now-bar {
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+.ts-now-bar .now-label { font-size: 13px; color: #64748b; font-weight: 600; }
+.ts-now-bar .now-value {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 13px;
+  color: #a5b4fc;
+}
+.ts-now-bar .now-sep { color: #334155; }
+
+.ts-timezone {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-top: 1px solid #1e293b;
+  background: #0f172a;
+  font-size: 13px;
+  color: #94a3b8;
+}
+.ts-timezone select {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #334155;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 13px;
+}
+.ts-timezone select:focus { outline: none; border-color: #6366f1; }
+
+/* ===== UUID Tool ===== */
+.uuid-config {
+  background: #111827;
+  border: 1px solid #1e293b;
+  border-radius: 12px;
+  padding: 20px 24px;
+}
+.uuid-config code {
+  font-family: "SF Mono", Consolas, monospace;
+  font-size: 12px;
+  background: #0f172a;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #a5b4fc;
+}
+
 /* ===== Toast ===== */
 .toast {
   position: fixed;
@@ -294,7 +374,8 @@ textarea::placeholder { color: #64748b; }
   .sidebar { width: 64px; }
   .logo-text, .nav-label, .nav-section, .sidebar-footer p { display: none; }
   .nav-item { justify-content: center; padding: 10px; }
-  .base64-grid { grid-template-columns: 1fr; height: auto; }
+  .base64-grid, .url-grid, .html-grid, .ts-grid { grid-template-columns: 1fr; height: auto; }
+  .url-pane textarea, .html-pane textarea, .ts-pane textarea { min-height: 150px; }
   .editor-wrapper { height: 50vh; }
   .main { padding: 20px 16px; }
 }
